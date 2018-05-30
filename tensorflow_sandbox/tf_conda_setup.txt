@@ -1,0 +1,20 @@
+conda update -n base conda
+
+conda create -n pyTF_build1 pip python=3.6
+activate pyTF_build1
+
+conda install cython
+conda install numpy
+conda install scikit-learn
+conda install matplotlib
+conda install spyder
+conda install tensorflow
+
+python
+import tensorflow as tf
+valid_tf = tf.constant('TF is running...')
+tf_sess = tf.Session()
+print(tf_sess.run(valid_tf))
+tf_sess.close()
+quit()
+exit
