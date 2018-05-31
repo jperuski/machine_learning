@@ -7,3 +7,4 @@ Coding machine learning algorithms from scratch. These are algorithmic templates
 ### Tensorflow Sandbox
 1. conda seteup
 2. Linear regression examples for API exploration
+3. Logistic regression experimtents
