@@ -84,7 +84,7 @@ err_vec, wgt_fit, pred = fit_linear_gd_opt(tf_sess = sess, x_var = x, y_var = y,
 # confirm smooth decreasing error / loss
 plt.plot(np.arange(epochs), err_vec)
 plt.ylabel('SSE')
-plt.xlabel('Epochs')
+plt.xlabel('Iterations')
 
 # test native tensorflow least squares solution
 # note: no regularization, documentation flags this function as high error \n
@@ -98,8 +98,8 @@ tf_native_ls = tf.matrix_solve_ls(
 tf_solve_ls_wgts = tf_native_ls.eval(session = sess)
 
 #  scikit-learn fit as a baseline for comparison
-lr = lm.LinearRegression()
-lr.fit(x, y)
-sk_lr_wgt = lr.coef_
+#lr = lm.LinearRegression()
+#lr.fit(x, y)
+#sk_lr_wgt = lr.coef_
 
 sess.close()
