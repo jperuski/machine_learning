@@ -62,11 +62,15 @@ def fit_logistic_gd_opt(tf_sess, x_var, y_var, batch_size, l_rate, epoch):
 
     # training steps
     for ii in range(epoch):
-        idx = np.random.randint(n_obs, size = batch_size)
-        x_var_b = x_var[idx, :]
-        y_var_b = y_var[idx, :]
-        _ , losses[ii] = tf_sess.run([optimizer, loss],
-                  feed_dict = {feat: x_var_b, resp: y_var_b})
+        
+        for jj in range(x_var.shape[0] % 64):
+            idx = np.random.randint(n_obs, size = batch_size)
+            x_var_b = x_var[idx, :]
+            y_var_b = y_var[idx, :]
+            _ , loss_t = tf_sess.run([optimizer, loss],
+                      feed_dict = {feat: x_var_b, resp: y_var_b})
+            if jj % 64 == 0:
+                losses[ii] = loss_t
 
     # prediction after final step
     y_out = tf_sess.run(y_est, feed_dict = {feat: x_var})
@@ -74,7 +78,7 @@ def fit_logistic_gd_opt(tf_sess, x_var, y_var, batch_size, l_rate, epoch):
     return (losses, wgt.eval(session = tf_sess), y_out, y_probs)
 
 l_rate = 0.01
-epochs = 1000
+epochs = 250
 loss_vec, wgt_fit, pred, probs = fit_logistic_gd_opt(tf_sess = sess,
                                                      x_var = x, y_var = y,
                                                      batch_size = 64, l_rate = l_rate, epoch = epochs)
@@ -86,5 +90,8 @@ plt.xlabel('Epochs')
 
 ## logistic regression w/o reguralization
 logreg = linear_model.LogisticRegression(C = 1)
-logreg.fit(x, y)
+logreg.fit(x, y_raw)
 logreg.predict_proba(x)
+
+## Confusion matrix for model comparison
+metrics.confusion_matrix(np.round(probs), np.round(logreg.predict_proba(x))[:,1])
